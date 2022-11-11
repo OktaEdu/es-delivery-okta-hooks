@@ -26,8 +26,8 @@ You'll need to add a couple of custom attributes to the Okta user profile in you
 | memberNumber | Used by the registration/dblookup handler to look up a user in an external data service during registration |
 | ssn | registration/dblookup also collects the users SSN, which is used for a financial service/healthcare demo use case of account claiming |
 | memberLevel | Used by the registration/dblookup handler. If account claiming (user lookup by memberNumber and SSN) is successful, the memberLevel value from the external data source is set on the users Okta profile.
-| inlineHookEndpoint | Okta endpoint for the Inline Hook API. Currently api/v1/callbacks, but this will probably change when the feature goes GA. |
-| eventHookEndpoint | Okta endpoint for the Event Hook API. Currently api/v1/webhooks, but this will probably change when the feature goes GA. |
+| inlineHookEndpoint | Okta endpoint for the Inline Hook API. Should be `api/v1/inlineHooks` |
+| eventHookEndpoint | Okta endpoint for the Event Hook API. Should be `api/v1/eventHooks`  |
 
 #### Demo Tip
 
