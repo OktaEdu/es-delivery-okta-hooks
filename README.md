@@ -41,18 +41,18 @@ Once configured, you can attempt to register as a new user for one of the applic
 
 ### Single Hook handler for all Okta Event Hook categories
 
-[https://okta-hooks.glitch.me/okta/hooks/event](https://okta-hooks.glitch.me/okta/hooks/event)
+[https://es-okta-hooks.glitch.me/okta/hooks/event](https://es-okta-hooks.glitch.me/okta/hooks/event)
 
 Use this if you want to register a single Hook in Okta for multiple (or all) event types. The handler uses a switch statement to perform different actions depending upon the event type of the incoming request.
 
 
 ### Separate Hook handlers for each Okta Event category
 
-[https://okta-hooks.glitch.me/okta/hooks/event/{{event-category}}](https://okta-hooks.glitch.me/okta/hooks/event/{{event-category}})
+[https://es-okta-hooks.glitch.me/okta/hooks/event/{{event-category}}](https://es-okta-hooks.glitch.me/okta/hooks/event/{{event-category}})
 
 These handlers are designed to cover individual 'categories' of events.
 
-For example [https://okta-hooks.glitch.me/okta/hooks/event/group-user-membership](https://okta-hooks.glitch.me/okta/hooks/event/group-user-membership) is designed to handle the following event types:
+For example [https://es-okta-hooks.glitch.me/okta/hooks/event/group-user-membership](https://es-okta-hooks.glitch.me/okta/hooks/event/group-user-membership) is designed to handle the following event types:
 
 - group.user_membership.add
 - group.user_membership.remove
