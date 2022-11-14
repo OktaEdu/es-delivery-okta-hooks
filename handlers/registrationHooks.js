@@ -77,29 +77,12 @@ router.post("/domain", function (req, res) {
   const emailName = emailAddress.substring(0, emailAddress.indexOf("@")); // email username
   const emailDomain = helpers.parseEmailDomain(emailAddress); // email domain
   const emailPrefix = emailDomain.substring(0, emailDomain.indexOf(".")); // email prefix (e.g., allow, deny, error)
-
-  // For the demo, we're expecting email domains like allow.actualdomain.com. We're going to
-  //   grap the first part of the domain, 'allow', and check that against our test cases. If
-  //   there's a match, we'll perform that demo use case. If the demo use case allows registration
-  //   to continue, we'll keep the prefix.actualdomain as the login name, but update the email
-  //   attribute of the user's profile to be emailname@actualdomain so that they will receive emails
-  //   from Okta correctly.
-
-  let parsedEmail;
-  let periods = (emailDomain.match(/\./g) || []).length;
-  console.log(`domain: ${emailDomain} periods: ${periods}`);
-
-  if (periods > 1) {
-    parsedEmail =
-      emailName +
-      "@" +
-      emailDomain.substring(emailPrefix.length + 1, emailDomain.length);
-  } else {
-    parsedEmail = emailAddress;
-  }
-
-  console.log(`emailPrefix: ${emailPrefix}`);
-  console.log(`parsedEmail: ${parsedEmail}`);
+  const parsedEmail = helpers.parseEmail(
+    emailAddress,
+    emailDomain,
+    emailPrefix,
+    emailName
+  );
 
   title = req.originalUrl;
   description = `Below is the <b>request</b> that Okta sent to our Registration Hook`;
@@ -110,6 +93,18 @@ router.post("/domain", function (req, res) {
   // *** DEMO *** depending on the email domain provided in the registration form,
   // this API will perform different actions
   switch (emailPrefix) {
+    case "allow":
+      commands = null;
+      error = null;
+      contextMessage = {
+        statusMessage: "Registration succeeded.",
+      };
+      debugContext = {
+        contextMessage: JSON.stringify(contextMessage),
+      };
+      statusCode = 200;
+      break;
+
     case "error":
       commands = [
         {
@@ -123,7 +118,10 @@ router.post("/domain", function (req, res) {
         errorSummary: "Registration Denied",
         errorCauses: [
           {
-            errorSummary: "Invalid email domain: " + emailDomain,
+            errorSummary:
+              "Invalid email domain: " +
+              emailDomain +
+              "(message from inline hook)",
             reason: "INVALID_EMAIL_DOMAIN",
             locationType: "body",
             location: "email",
@@ -133,18 +131,7 @@ router.post("/domain", function (req, res) {
       };
       contextMessage = {
         status: "Registration Failed",
-        reason: "Registration denied for invalid email domain: " + emailDomain + "(message from inline hook)",
-      };
-      debugContext = {
-        contextMessage: JSON.stringify(contextMessage),
-      };
-      statusCode = 200;
-      break;
-    case "allow":
-      commands = null;
-      error = null;
-      contextMessage = {
-        statusMessage: "Registration succeeded.",
+        reason: "Registration denied for invalid email domain: " + emailDomain,
       };
       debugContext = {
         contextMessage: JSON.stringify(contextMessage),
