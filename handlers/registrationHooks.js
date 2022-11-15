@@ -94,7 +94,14 @@ router.post("/domain", function (req, res) {
   // this API will perform different actions
   switch (emailPrefix) {
     case "allow":
-      commands = null;
+      commands = [
+        {
+          type: "com.okta.user.profile.update",
+          value: {
+            email: parsedEmail,
+          },
+        },
+      ];
       error = null;
       contextMessage = {
         statusMessage: "Registration succeeded.",
@@ -105,7 +112,7 @@ router.post("/domain", function (req, res) {
       statusCode = 200;
       break;
 
-    case "error":
+    default:
       commands = [
         {
           type: "com.okta.action.update",
@@ -121,7 +128,7 @@ router.post("/domain", function (req, res) {
             errorSummary:
               "Invalid email domain: " +
               emailDomain +
-              "(message from inline hook)",
+              " (message from inline hook)",
             reason: "INVALID_EMAIL_DOMAIN",
             locationType: "body",
             location: "email",
@@ -132,29 +139,6 @@ router.post("/domain", function (req, res) {
       contextMessage = {
         status: "Registration Failed",
         reason: "Registration denied for invalid email domain: " + emailDomain,
-      };
-      debugContext = {
-        contextMessage: JSON.stringify(contextMessage),
-      };
-      statusCode = 200;
-      break;
-
-    default:
-      // If the email domain provided doesn't match any of our demo use cases, deny registration
-      commands = [
-        {
-          type: "com.okta.action.update",
-          value: {
-            registration: "DENY",
-          },
-        },
-      ];
-      error = null;
-      contextMessage = {
-        status: "Registration denied (message from inline hook)",
-        reason:
-          "Demo use case denying registration with no specific error for domain: " +
-          emailDomain,
       };
       debugContext = {
         contextMessage: JSON.stringify(contextMessage),
