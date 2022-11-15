@@ -20,12 +20,12 @@ let responsePayload = {}; // currently not used by Okta in beta implementation
  *
  **/
 
-// Includes all events that begin with "user.profile"
+// Use to listen to user profile update events
 router.post("/user-profile/update", function (req, res) {
   let eventType;
 
-  if (req.body.events[0]) {
-    eventType = req.body.events[0].eventType;
+  if (req.body.data.events) {
+    eventType = req.body.data.events[0].eventType;
   }
 
   title = req.originalUrl;
@@ -37,7 +37,7 @@ router.post("/user-profile/update", function (req, res) {
   res.status(204).send(responsePayload);
 });
 
-// GET verification endpoint for async webhooks
+// GET verification endpoint
 router.get("/user-profile/update", function (req, res) {
   helpers.logRequest(req);
 
